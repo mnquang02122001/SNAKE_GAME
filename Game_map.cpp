@@ -1,11 +1,6 @@
 #include"Game_map.h"
 
 void GameMap::LoadMap(char* name) {
-	/*std::ifstream file;
-	file.open(name, std::ios::in);
-	if (!file.is_open()) {
-		return;
-	}*/
 	FILE* fp = NULL;
 	fopen_s(&fp, name, "rb");
 	if (fp == NULL) {
@@ -16,7 +11,6 @@ void GameMap::LoadMap(char* name) {
 	for (int i = 0; i < MAX_MAP_Y; i++) {
 		for (int j = 0; j < MAX_MAP_X; j++)
 		{
-			//file >> game_map_.tile[i][j];
 			fscanf_s(fp, "%d", &game_map_.tile[i][j]);
 		    int val = game_map_.tile[i][j];
 		if (val > 0) {
@@ -41,17 +35,10 @@ void GameMap::LoadMap(char* name) {
 
 void GameMap::LoadTiles(SDL_Renderer* screen) {
 	char file_img[30];
-	//std::ofstream file(file_img, std::ios::out);
 	FILE* fp = NULL;
 
 	for (int i = 0; i < MAX_TILES; i++)
 	{
-		/*file.open(file_img, std::ios::out);
-		file << "map/" << i << ".png";
-		if (!file.is_open()) {
-			continue;
-		}
-		file.close();*/
 		sprintf_s(file_img, "map/%d.png", i);
 		fopen_s(&fp, file_img, "rb");
 		if (fp == NULL) {

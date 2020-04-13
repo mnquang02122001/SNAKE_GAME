@@ -16,8 +16,8 @@ public:
 class GameMap {
 
 public:
-	GameMap() { ; }
-	~GameMap() { ; }
+	GameMap() { }
+	~GameMap() { }
 
 	void LoadMap(char* name);
 	void LoadTiles(SDL_Renderer* screen);
