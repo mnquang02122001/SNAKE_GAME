@@ -2,7 +2,7 @@
 #include"BaseObject.h"
 #include"Game_map.h"
 #include"MainObject.h"
-
+#include"ImpTimer.h"
 BaseObject g_background;
 void close() {
     g_background.Free();
@@ -49,7 +49,7 @@ bool InitData() {
 
 }
 bool LoadBackground() {
-    bool ret = g_background.LoadImg("img//BACKGROUND.jpg", g_screen);
+    bool ret = g_background.LoadImg("img//background.png", g_screen);
     if (!ret) {
         return false;
     }
@@ -57,6 +57,7 @@ bool LoadBackground() {
 }
 
 int main(int argc, char* argv[]) {
+    ImpTimer fps_timer;
     if (!InitData()) {
         return -1;
     }
@@ -73,6 +74,7 @@ int main(int argc, char* argv[]) {
     p_player.set_clips();
     bool is_quit = false;
     while (!is_quit) {
+        fps_timer.start();
         while (SDL_PollEvent(&g_event) != 0) {
             if (g_event.type == SDL_QUIT) {
                 is_quit = true;
@@ -83,10 +85,26 @@ int main(int argc, char* argv[]) {
         SDL_RenderClear(g_screen);
 
         g_background.Render(g_screen, NULL);
-        game_map.DrawMap(g_screen);
+        //game_map.DrawMap(g_screen);
 
+        Map map_data = game_map.getMap();
+        p_player.SetMapXY(map_data.start_x, map_data.start_y);
+        p_player.DoPlayer(map_data);
         p_player.Show(g_screen);
+
+        game_map.SetMap(map_data);
+        game_map.DrawMap(g_screen);
         SDL_RenderPresent(g_screen);
+
+        int real_imp_time = fps_timer.get_ticks();
+        int time_one_frame = 1000 / FRAME_PER_SECOND; //ms
+
+        if (real_imp_time < time_one_frame) {
+            int delayer_time = time_one_frame - real_imp_time;
+            if (delayer_time > 0) {
+                SDL_Delay(delayer_time);
+            }
+        }
     }
     close();
     return 0;

@@ -8,12 +8,14 @@
 #include<SDL_mixer.h>
 #include<SDL_ttf.h>
 #include<string>
-#include<fstream>
 
 static SDL_Window* g_window;
 static SDL_Renderer* g_screen;
 static SDL_Event g_event;
 
+
+//screen
+const int FRAME_PER_SECOND = 80; //fps
 const int SCREEN_HEIGHT = 640;
 const int SCREEN_WIDTH = 1280;
 const int SCREEN_BPP = 32;
@@ -28,7 +30,7 @@ const int RENDER_DRAW_COLOR = 0xff;
 #define TILE_SIZE 64
 #define MAX_MAP_X 400
 #define MAX_MAP_Y 10
-
+#define PLANK_TILE 0
 typedef struct Input {
     int left_;
     int right_;
