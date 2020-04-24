@@ -1,13 +1,15 @@
 #ifndef MAIN_OBJECT_H
 #define MAIN_OBJECT_H
 
+#include<vector>
 #include"CommonFunc.h"
 #include"BaseObject.h"
+#include"BulletObject.h"
 
 #define GRAVITY_SPEED 2
 #define MAX_FALL_SPEED 10
 #define PLAYER_SPEED 6
-#define PLAYER_JUMP_VAL 18
+#define PLAYER_JUMP_VAL 30
 class MainObject : public BaseObject {
 public: 
 	MainObject();
@@ -26,7 +28,15 @@ public:
 	void CheckToMap(Map& map_data);
 	void SetMapXY(const int map_x, const int map_y) { map_x_ = map_x; map_y_ = map_y; }
 	void CenterEntityOnMap(Map& map_data);
+
+	void set_bullet_list(std::vector<BulletObject*> bullet_list) {
+		p_bullet_list_ = bullet_list;
+	}
+	std::vector<BulletObject*> get_bullet_list() { return p_bullet_list_; }
+	void HandleBullet(SDL_Renderer* des);
 private:
+	std::vector<BulletObject*> p_bullet_list_;
+	
     float x_val_;
 	float y_val_;
 
@@ -36,8 +46,8 @@ private:
 	int width_frame_;
 	int height_frame_;
 
+	//SDL_Rect frame_clip_[8];
 	SDL_Rect frame_clip_[8];
-	//SDL_Rect frame_clip_[1];
 
 	Input input_type_;
 	int frame_;
@@ -46,6 +56,8 @@ private:
 
 	int map_x_;
 	int map_y_;
+
+	int come_back_time;
 };
 
 #endif // !MAIN_OBJECT_H

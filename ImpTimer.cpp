@@ -6,7 +6,6 @@ ImpTimer::ImpTimer() {
 	is_paused_ = false;
 	is_started_ = false;
 }
-
 ImpTimer::~ImpTimer() {
 
 }
@@ -28,7 +27,7 @@ void ImpTimer::paused() {
 }
 
 void ImpTimer::unpaused() {
-	if (is_paused_ = true){
+	if (is_paused_ == true){
 		is_paused_ = false;
 		start_tick_ = SDL_GetTicks() - paused_tick_;
 		paused_tick_ = 0;

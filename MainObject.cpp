@@ -18,6 +18,7 @@ MainObject::MainObject() {
 	on_ground_ = false;
 	map_x_ = 0;
 	map_y_ = 0;
+	come_back_time = 0;
 }
 
 MainObject::~MainObject(){}
@@ -139,37 +140,83 @@ void MainObject::HandleInputAction(SDL_Event events, SDL_Renderer* screeen) {
 					  break;
 		}
 	}
-	/* if (events.type == SDL_MOUSEBUTTONDOWN) {
+	 if (events.type == SDL_MOUSEBUTTONDOWN) {
 		if (events.button.button == SDL_BUTTON_RIGHT) {
 			input_type_.jump_ = 1;
 		}
-	}*/
-	if (events.type == SDL_KEYDOWN) {
+		else if (events.button.button == SDL_BUTTON_LEFT) {
+			BulletObject* p_bullet = new BulletObject();
+			p_bullet->LoadImg("img//player_bullet.png",screeen);
+			if (status_ == WALK_LEFT) {
+				p_bullet->set_bullet_dir(BulletObject::DIR_LEFT);
+				p_bullet->SetRect(this->rect_.x - 20, this->rect_.y + height_frame_ * 0.25);
+				}
+			else {
+				p_bullet->set_bullet_dir(BulletObject::DIR_RIGHT);
+				p_bullet->SetRect(this->rect_.x + width_frame_ - 20, this->rect_.y + height_frame_ * 0.3);
+			}
+			p_bullet->set_x_val(20);
+			p_bullet->set_y_val(20);
+			p_bullet->set_is_move(true);
+
+			p_bullet_list_.push_back(p_bullet);
+		}
+	}
+	/*if (events.type == SDL_KEYDOWN) {
 		if (events.key.keysym.sym == SDLK_UP) {
 			input_type_.jump_ = 1;
+		}
+	}*/
+}
+void MainObject::HandleBullet(SDL_Renderer* des) {
+	for (int i = 0; i < p_bullet_list_.size(); i++) {
+		BulletObject* p_bullet = p_bullet_list_.at(i);
+		if (p_bullet != NULL) {
+			if (p_bullet->get_is_move() == true) {
+				p_bullet->HandleMove(SCREEN_WIDTH, SCREEN_HEIGHT);
+				p_bullet->Render(des,NULL);
+			}
+			else {
+				p_bullet_list_.erase(p_bullet_list_.begin() + i);
+				if (p_bullet != NULL) {
+					delete p_bullet;
+					p_bullet = NULL;
+				}
+			}
 		}
 	}
 }
 void MainObject::DoPlayer(Map& map_data) {
-	x_val_ = 0;
-	y_val_ += GRAVITY_SPEED;
-	if (y_val_ > GRAVITY_SPEED) {
-		y_val_ = GRAVITY_SPEED;
-	}
-	if (input_type_.left_ == 1) {
-		x_val_ -= PLAYER_SPEED;
-	}
-	if (input_type_.right_ == 1) {
-		x_val_ += PLAYER_SPEED;
-	}
-	if (input_type_.jump_ == 1) {
-		if (on_ground_ == true) {
-			y_val_ = -PLAYER_JUMP_VAL;
+	if (come_back_time == 0) {
+		x_val_ = 0;
+		y_val_ += GRAVITY_SPEED;
+		if (y_val_ > GRAVITY_SPEED) {
+			y_val_ = GRAVITY_SPEED;
 		}
-		input_type_.jump_ = 0;
+		if (input_type_.left_ == 1) {
+			x_val_ -= PLAYER_SPEED;
+		}
+		if (input_type_.right_ == 1) {
+			x_val_ += PLAYER_SPEED;
+		}
+		if (input_type_.jump_ == 1) {
+			if (on_ground_ == true) {
+				y_val_ = -PLAYER_JUMP_VAL;
+			}
+			on_ground_ = false;
+			input_type_.jump_ = 0;
+		}
+		CheckToMap(map_data);
+		CenterEntityOnMap(map_data);
 	}
-	CheckToMap(map_data);
-	CenterEntityOnMap(map_data);
+	if (come_back_time > 0) {
+		come_back_time--;
+		if (come_back_time == 0) {
+			y_pos_ = 0;
+			y_val_ = 0;
+			x_val_ = 0;
+		}
+	}
 }
 
 void MainObject::CheckToMap(Map& map_data) {
@@ -184,14 +231,14 @@ void MainObject::CheckToMap(Map& map_data) {
 	x1 = (x_pos_ + x_val_) / TILE_SIZE;
 	x2 = (x_pos_ + x_val_ + width_frame_ - 1) / TILE_SIZE;
 
-	y1 = y_pos_ / TILE_SIZE;
+	y1 = (y_pos_) / TILE_SIZE;
 	y2 = (y_pos_ + height_min - 1) / TILE_SIZE;
 
 	if (x1 >= 0 && x2 < MAX_MAP_X && y1 >= 0 && y2 < MAX_MAP_Y) {
 		if (x_val_ > 0) {    // move right
 			if (map_data.tile[y1][x2] != PLANK_TILE || map_data.tile[y2][x2] != PLANK_TILE) {
 				x_pos_ = x2 * TILE_SIZE;
-				x_pos_ -= (width_frame_ + 1);
+				x_pos_ -= width_frame_ + 1;
 				x_val_ = 0;
 			}
 		}
@@ -233,8 +280,11 @@ void MainObject::CheckToMap(Map& map_data) {
 			x_pos_ = 0;
 		}
 		if (x_pos_ + width_frame_ > map_data.max_x) {
-			x_pos_ = map_data.max_x - width_frame_;
+			x_pos_ = map_data.max_x - width_frame_ - 1;
 		}
+	}
+	if (y_pos_ > map_data.max_y) {
+		come_back_time = 60;
 	}
 }
 

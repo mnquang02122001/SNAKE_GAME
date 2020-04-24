@@ -85,9 +85,10 @@ int main(int argc, char* argv[]) {
         SDL_RenderClear(g_screen);
 
         g_background.Render(g_screen, NULL);
-        //game_map.DrawMap(g_screen);
 
         Map map_data = game_map.getMap();
+
+        p_player.HandleBullet(g_screen);
         p_player.SetMapXY(map_data.start_x, map_data.start_y);
         p_player.DoPlayer(map_data);
         p_player.Show(g_screen);
