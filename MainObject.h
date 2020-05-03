@@ -6,10 +6,11 @@
 #include"BaseObject.h"
 #include"BulletObject.h"
 
-#define GRAVITY_SPEED 2
+#define GRAVITY_SPEED 4
 #define MAX_FALL_SPEED 10
 #define PLAYER_SPEED 6
-#define PLAYER_JUMP_VAL 30
+#define PLAYER_JUMP_VAL 35
+#define PLAYER_FRAME_NUM 1
 class MainObject : public BaseObject {
 public: 
 	MainObject();
@@ -22,19 +23,22 @@ public:
 	};
 	bool LoadImg(std::string path, SDL_Renderer* screen);
 	void Show(SDL_Renderer* des);
-	void HandleInputAction(SDL_Event events, SDL_Renderer* screeen);
+	void HandleInputAction(SDL_Event events, SDL_Renderer* screen);
 	void set_clips();
 	void DoPlayer(Map& map_data);
 	void CheckToMap(Map& map_data);
 	void SetMapXY(const int map_x, const int map_y) { map_x_ = map_x; map_y_ = map_y; }
 	void CenterEntityOnMap(Map& map_data);
-
+	SDL_Rect GetRectFrame();
 	void set_bullet_list(std::vector<BulletObject*> bullet_list) {
 		p_bullet_list_ = bullet_list;
 	}
 	std::vector<BulletObject*> get_bullet_list() { return p_bullet_list_; }
 	void HandleBullet(SDL_Renderer* des);
+	void IncreaseMoney();
+	void RemoveBullet(const int& index);
 private:
+	int money_count;
 	std::vector<BulletObject*> p_bullet_list_;
 	
     float x_val_;
@@ -46,8 +50,7 @@ private:
 	int width_frame_;
 	int height_frame_;
 
-	//SDL_Rect frame_clip_[8];
-	SDL_Rect frame_clip_[8];
+	SDL_Rect frame_clip_[PLAYER_FRAME_NUM];
 
 	Input input_type_;
 	int frame_;

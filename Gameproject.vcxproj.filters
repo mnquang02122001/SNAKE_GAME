@@ -39,11 +39,11 @@
     <ClCompile Include="BulletObject.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="ThreatsObject.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="BaseObject.h">
-      <Filter>Header Files\Lib</Filter>
-    </ClInclude>
     <ClInclude Include="CommonFunc.h">
       <Filter>Header Files\Lib</Filter>
     </ClInclude>
@@ -57,6 +57,12 @@
       <Filter>Header Files\Lib</Filter>
     </ClInclude>
     <ClInclude Include="BulletObject.h">
+      <Filter>Header Files\Lib</Filter>
+    </ClInclude>
+    <ClInclude Include="ThreatsObject.h">
+      <Filter>Header Files\Lib</Filter>
+    </ClInclude>
+    <ClInclude Include="BaseObject.h">
       <Filter>Header Files\Lib</Filter>
     </ClInclude>
   </ItemGroup>

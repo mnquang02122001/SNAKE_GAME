@@ -5,9 +5,19 @@ BulletObject::BulletObject(){
 	x_val_ = 0;
 	y_val_ = 0;
 	is_move_ = false;
+	bullet_type_ = CIRCLE_BULLET;
 }
 BulletObject::~BulletObject() {}
-
+bool BulletObject::LoadImgBullet(SDL_Renderer* screen) {
+	bool ret = false;
+	if (bullet_type_ == CIRCLE_BULLET) {
+		ret = LoadImg("img//circle_bullet.png", screen);
+	}
+	else if (bullet_type_ == LASER_BULLET) {
+		ret = LoadImg("img//laser_bullet.png", screen);
+	}
+	return ret;
+}
 void BulletObject::HandleMove(const int& x_border, const int& y_border) {
 	if (bullet_dir_ == DIR_RIGHT) {
 		rect_.x += x_val_;
