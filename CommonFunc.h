@@ -9,9 +9,9 @@
 #include<SDL_ttf.h>
 #include<string>
 #include<vector>
-static SDL_Window* g_window;
-static SDL_Renderer* g_screen;
-static SDL_Event g_event;
+static SDL_Window* global_window;
+static SDL_Renderer* global_screen;
+static SDL_Event global_event;
 
 
 //screen

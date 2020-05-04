@@ -1,16 +1,58 @@
 #include"CommonFunc.h"
 #include"BaseObject.h"
-#include"Game_map.h"
-#include"MainObject.h"
-#include"ImpTimer.h"
-#include"ThreatsObject.h"
-BaseObject g_background;
-void close() {
-    g_background.Free();
-    SDL_DestroyRenderer(g_screen);
-    g_screen = NULL;
-    SDL_DestroyWindow(g_window);
-    g_window = NULL;
+#include"Map.h"
+#include"Player.h"
+#include"FPS.h"
+#include"Monster.h"
+BaseObject global_background;
+bool InitData() {
+    bool init = true;
+    int result = SDL_Init(SDL_INIT_VIDEO);
+    if (result < 0) {
+        return false;
+    }
+    SDL_SetHint(SDL_HINT_RENDER_SCALE_QUALITY, "1");
+    global_window = SDL_CreateWindow(WINDOW_TITLE.c_str(),
+        SDL_WINDOWPOS_UNDEFINED,
+        SDL_WINDOWPOS_UNDEFINED,
+        SCREEN_WIDTH, SCREEN_HEIGHT,
+        SDL_WINDOW_SHOWN);
+    if (global_window == NULL) {
+        init = false;
+    }
+    else {
+        global_screen = SDL_CreateRenderer(global_window, -1, SDL_RENDERER_ACCELERATED);
+        if (global_screen == NULL) {
+            init = false;
+        }
+        else {
+            SDL_SetRenderDrawColor(global_screen,
+                RENDER_DRAW_COLOR,
+                RENDER_DRAW_COLOR,
+                RENDER_DRAW_COLOR,
+                RENDER_DRAW_COLOR);
+            int imagFlags = IMG_INIT_PNG;
+            if (!(IMG_Init(imagFlags) && imagFlags)) {
+                init = false;
+            }
+        }
+    }
+    return init;
+}
+bool LoadBackground() {
+    bool result = global_background.LoadImg("img//BackGround123.jpg", global_screen);
+    if (!result) {
+        return false;
+    }
+    return true;
+}
+
+void CloseProject() {
+    global_background.Free();
+    SDL_DestroyRenderer(global_screen);
+    global_screen = NULL;
+    SDL_DestroyWindow(global_window);
+    global_window = NULL;
     IMG_Quit();
     SDL_Quit();
 }
@@ -21,12 +63,11 @@ std::vector<ThreatsObject*> MakeThreadList() {
     for (int i = 0; i < 20; i++) {
         ThreatsObject* p_threat = (dynamic_objs + i);
         if (p_threat != nullptr) {
-            p_threat->LoadImg("img//threat_left.png", g_screen);
+            p_threat->LoadImg("img//threat_left.png", global_screen);
             p_threat->set_clips();
             p_threat->set_type_move(ThreatsObject::MOVE_IN_SPACE);
             p_threat->set_x_pos(500 + i * 500);
             p_threat->set_y_pos(200);
-
             int pos1 = p_threat->get_x_pos() - 60;
             int pos2 = p_threat->get_x_pos() + 60;
             p_threat->SetAnimation(pos1, pos2);
@@ -40,163 +81,102 @@ std::vector<ThreatsObject*> MakeThreadList() {
 
         ThreatsObject* p_threat1 = (threats_objs + i);
         if (p_threat1 != NULL) {
-            p_threat1->LoadImg("img//static_robot.png", g_screen);
+            p_threat1->LoadImg("img//static_robot.png", global_screen);
             p_threat1->set_clips();
             p_threat1->set_x_pos(700 + i*1200);
             p_threat1->set_y_pos(250);
             p_threat1->set_type_move(ThreatsObject::STATIC_THREAT);
-
-            BulletObject* p_bullet = new BulletObject();
-            p_threat1->InitBullet(p_bullet, g_screen);
-
             list_threats.push_back(p_threat1);
         }
     }
     return list_threats;
 }
 
-bool InitData() {
-    bool sucess = true;
-    int ret = SDL_Init(SDL_INIT_VIDEO);
-    if (ret < 0) {
-        return false;
-    }
-    SDL_SetHint(SDL_HINT_RENDER_SCALE_QUALITY, "1");
-    g_window = SDL_CreateWindow(WINDOW_TITLE.c_str(),
-                                 SDL_WINDOWPOS_UNDEFINED,
-                                 SDL_WINDOWPOS_UNDEFINED, 
-                                 SCREEN_WIDTH, SCREEN_HEIGHT, 
-                                 SDL_WINDOW_SHOWN);
-    if (g_window == NULL) {
-        sucess = false;
-    }
-    else {
-        g_screen = SDL_CreateRenderer(g_window, -1, SDL_RENDERER_ACCELERATED);
-        if (g_screen == NULL) {
-            sucess = false;
-        }
-        else {
-            SDL_SetRenderDrawColor(g_screen, 
-                                   RENDER_DRAW_COLOR, 
-                                   RENDER_DRAW_COLOR,  
-                                   RENDER_DRAW_COLOR,  
-                                   RENDER_DRAW_COLOR);
-            int imagFlags = IMG_INIT_PNG;
-            if (!(IMG_Init(imagFlags) && imagFlags)) {
-                sucess = false;
-            }
-        }
-    }
-    return sucess;
-
-}
-bool LoadBackground() {
-    bool ret = g_background.LoadImg("img//BackGround123.jpg", g_screen);
-    if (!ret) {
-        return false;
-    }
-    return true;
-}
-
 int main(int argc, char* argv[]) {
-    ImpTimer fps_timer;
+    ImpTimer FPStimer;
     if (!InitData()) {
         return -1;
     }
     if (!LoadBackground()) {
         return -1; 
     }
-    GameMap game_map;
+    GameMap Map_Game;
     char dirmap[] = "map/map01.dat";
-    game_map.LoadMap(dirmap);
-    game_map.LoadTiles(g_screen);
+    Map_Game.LoadMap(dirmap);
+    Map_Game.LoadTiles(global_screen);
 
-    MainObject p_player;
-    p_player.LoadImg("img//player_right.png", g_screen);
-    p_player.set_clips();
+    MainObject PLAYER;
+    PLAYER.LoadImg("img//player_right.png", global_screen);
+    PLAYER.set_clips();
 
     std::vector<ThreatsObject*> threats_list = MakeThreadList();
-
-    bool is_quit = false;
-    while (!is_quit) {
-        fps_timer.start();
-        while (SDL_PollEvent(&g_event) != 0) {
-            if (g_event.type == SDL_QUIT) {
-                is_quit = true;
+    
+    bool quit = false;
+    while (!quit) {
+        FPStimer.start();
+        while (SDL_PollEvent(&global_event) != 0) {
+            if (global_event.type == SDL_QUIT) {
+                quit = true;
             }
-            p_player.HandleInputAction(g_event, g_screen);
+            PLAYER.HandleInputAction(global_event, global_screen);
         }
-        SDL_SetRenderDrawColor(g_screen, RENDER_DRAW_COLOR, RENDER_DRAW_COLOR, RENDER_DRAW_COLOR, RENDER_DRAW_COLOR);
-        SDL_RenderClear(g_screen);
+        SDL_SetRenderDrawColor(global_screen, RENDER_DRAW_COLOR, RENDER_DRAW_COLOR, RENDER_DRAW_COLOR, RENDER_DRAW_COLOR);
+        SDL_RenderClear(global_screen);
 
-        g_background.Render(g_screen, NULL);
+        global_background.Render(global_screen, NULL);
 
-        Map map_data = game_map.getMap();
+        Map MAP = Map_Game.getMap();
 
-        p_player.HandleBullet(g_screen);
-        p_player.SetMapXY(map_data.start_x, map_data.start_y);
-        p_player.DoPlayer(map_data);
-        p_player.Show(g_screen);
+        PLAYER.HandleBullet(global_screen);
+        PLAYER.SetMapXY(MAP.start_x, MAP.start_y);
+        PLAYER.DoPlayer(MAP);
+        PLAYER.Show(global_screen);
 
-        game_map.SetMap(map_data);
-        game_map.DrawMap(g_screen);
+        Map_Game.SetMap(MAP);
+        Map_Game.DrawMap(global_screen);
 
         for (int i = 0; i < threats_list.size(); i++) {
-            ThreatsObject* p_threat = threats_list.at(i);
-            if (p_threat != NULL) {
-                p_threat->SetMapXY(map_data.start_x, map_data.start_y);
-                p_threat->ImpMoveType(g_screen);
-                p_threat->DoPlayer(map_data);
-                p_threat->MakeBullet(g_screen, SCREEN_WIDTH, SCREEN_HEIGHT);
-                p_threat->Show(g_screen);
+            ThreatsObject* THREATS = threats_list.at(i);
+            if (THREATS != NULL) {
+                THREATS->SetMapXY(MAP.start_x, MAP.start_y);
+                THREATS->ImpMoveType(global_screen);
+                THREATS->DoPlayer(MAP);
+                THREATS->Show(global_screen);
 
-                SDL_Rect rect_player = p_player.GetRectFrame();
-                bool bCol1 = false;
-                /*std::vector<BulletObject*> tBullet_list = p_threat->get_bullet_list();
-                for (int j = 0; j < tBullet_list.size(); j++) {
-                    BulletObject* pt_bullet = tBullet_list.at(j);
-                    if (pt_bullet) {
-                        bCol1 = SDLCommonFunc::CheckCollision(rect_player,pt_bullet->GetRect());
-                        if (bCol1) {
-                           p_threat->RemoveBullet(j);
-                           break;
-                       }
-                    }
-                }
+                SDL_Rect RECTPLAYER = PLAYER.GetRectFrame();
+                SDL_Rect RECTTHREAT = THREATS->GetRectFrame();
 
-                SDL_Rect rect_threat = p_threat->GetRectFrame();
-                
-                bool bCol2 = SDLCommonFunc::CheckCollision(rect_player, rect_threat);
+                bool check = SDLCommonFunc::CheckCollision(RECTPLAYER, RECTTHREAT);
 
-                if (bCol1 || bCol2) {
-                        if (MessageBox(NULL, L"GAME OVER", L"INFO" ,MB_OK | MB_ICONSTOP) == IDOK) {
-                        p_threat->Free();
-                        close();
+                if (check) {
+                    if (MessageBox(NULL, L"GAME OVER", L"Poor you!", MB_OK | MB_ICONSTOP) == IDOK) {
+                        THREATS->Free();
+                        CloseProject();
                         SDL_Quit();
                         return 0;
                     }
-                }*/
+                }
             }
         }
-        std::vector<BulletObject*> bullet_arr = p_player.get_bullet_list();
-        for (int r = 0; r < bullet_arr.size(); r++) {
-            BulletObject* p_bullet = bullet_arr.at(r);
-            if (p_bullet != NULL) {
+        std::vector<BulletObject*> BULLET = PLAYER.get_bullet_list();
+        for (int r = 0; r < BULLET.size(); r++) {
+            BulletObject* PLAYER_BULL = BULLET.at(r);
+            if (PLAYER_BULL != NULL) {
                 for (int t = 0; t < threats_list.size(); t++) {
-                    ThreatsObject* obj_threat = threats_list.at(t);
-                    if (obj_threat != NULL) {
+                    ThreatsObject* OBJECT_THREAT = threats_list.at(t);
+                    if (OBJECT_THREAT != NULL) {
                         SDL_Rect tRect;
-                        tRect.x = obj_threat->GetRect().x;
-                        tRect.y = obj_threat->GetRect().y;
-                        tRect.w = obj_threat->get_width_frame();
-                        tRect.h = obj_threat->get_height_frame();
+                        tRect.x = OBJECT_THREAT->GetRect().x;
+                        tRect.y = OBJECT_THREAT->GetRect().y;
+                        tRect.w = OBJECT_THREAT->get_width_frame();
+                        tRect.h = OBJECT_THREAT->get_height_frame();
 
-                        SDL_Rect bRect = p_bullet->GetRect();
+                        SDL_Rect BULLRect = PLAYER_BULL->GetRect();
 
-                        bool bCol = SDLCommonFunc::CheckCollision(bRect, tRect);
-                        if (bCol) {
-                            p_player.RemoveBullet(r);   
-                            obj_threat->Free();
+                        bool CHECK = SDLCommonFunc::CheckCollision(BULLRect, tRect);
+                        if (CHECK) {
+                            PLAYER.RemoveBullet(r);
+                            OBJECT_THREAT->Free();
                             threats_list.erase(threats_list.begin() + t);
                         }
                     }
@@ -204,26 +184,23 @@ int main(int argc, char* argv[]) {
             }
         }
 
-        SDL_RenderPresent(g_screen);
+        SDL_RenderPresent(global_screen);
 
-        int real_imp_time = fps_timer.get_ticks();
-        int time_one_frame = 1000 / FRAME_PER_SECOND; //ms
+        int REALTIME = FPStimer.get_ticks();
+        int TIME_1_FRAME = 1000 / FRAME_PER_SECOND; //ms
 
-        if (real_imp_time < time_one_frame) {
-            int delayer_time = time_one_frame - real_imp_time;
-            if (delayer_time > 0) {
-                SDL_Delay(delayer_time);
-            }
+        if (REALTIME < TIME_1_FRAME) {
+            SDL_Delay(TIME_1_FRAME - REALTIME);
         }
     }
     for (int i = 0; i < threats_list.size(); i++) {
-        ThreatsObject* p_threat = threats_list.at(i);
-        if (p_threat) {
-            p_threat->Free();
-            p_threat = NULL;
+        ThreatsObject* THREATS = threats_list.at(i);
+        if (THREATS) {
+            THREATS->Free();
+            THREATS = NULL;
         }
     }
     threats_list.clear();
-    close();
+    CloseProject();
     return 0;
 }

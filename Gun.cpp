@@ -1,4 +1,4 @@
-#include"BulletObject.h"
+#include"Gun.h"
 
 
 BulletObject::BulletObject(){

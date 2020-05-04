@@ -1,4 +1,4 @@
-#include"ImpTimer.h"
+#include"FPS.h"
 
 ImpTimer::ImpTimer() {
 	start_tick_ = 0;

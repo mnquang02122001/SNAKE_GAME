@@ -27,19 +27,19 @@
     <ClCompile Include="BaseObject.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="Game_map.cpp">
+    <ClCompile Include="Player.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="MainObject.cpp">
+    <ClCompile Include="Monster.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="ImpTimer.cpp">
+    <ClCompile Include="FPS.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="BulletObject.cpp">
+    <ClCompile Include="Map.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="ThreatsObject.cpp">
+    <ClCompile Include="Gun.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
@@ -47,22 +47,22 @@
     <ClInclude Include="CommonFunc.h">
       <Filter>Header Files\Lib</Filter>
     </ClInclude>
-    <ClInclude Include="Game_map.h">
+    <ClInclude Include="BaseObject.h">
       <Filter>Header Files\Lib</Filter>
     </ClInclude>
-    <ClInclude Include="MainObject.h">
+    <ClInclude Include="Player.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="ImpTimer.h">
+    <ClInclude Include="Monster.h">
       <Filter>Header Files\Lib</Filter>
     </ClInclude>
-    <ClInclude Include="BulletObject.h">
+    <ClInclude Include="FPS.h">
       <Filter>Header Files\Lib</Filter>
     </ClInclude>
-    <ClInclude Include="ThreatsObject.h">
+    <ClInclude Include="Map.h">
       <Filter>Header Files\Lib</Filter>
     </ClInclude>
-    <ClInclude Include="BaseObject.h">
+    <ClInclude Include="Gun.h">
       <Filter>Header Files\Lib</Filter>
     </ClInclude>
   </ItemGroup>

@@ -1,5 +1,5 @@
-#ifndef IMP_TIMER_H_
-#define IMP_TIMER_H_
+#ifndef FPS_H_
+#define FPS_H_
 
 #include"CommonFunc.h"
 class ImpTimer {
@@ -25,4 +25,4 @@ private:
 };
 
 
-#endif // !IMP_TIMER_
+#endif // !FPS_H_

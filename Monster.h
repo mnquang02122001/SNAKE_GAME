@@ -1,8 +1,8 @@
-#ifndef THREATS_OBJECT_H_
-#define THREATS_OBJECT_H_
+#ifndef MONSTER_H_
+#define MONSTER_H_
 #include"CommonFunc.h"
 #include"BaseObject.h"
-#include"BulletObject.h"
+#include"Gun.h"
 #define THREAT_FRAME_NUM 1
 #define THREAT_GRAVITY_SPEED 0.8
 #define MAX_FALL_SPEED 10
@@ -47,8 +47,8 @@ public:
 	std::vector<BulletObject*> get_bullet_list() const { return bullet_list_; }
 	void set_bullet_list(const std::vector<BulletObject*>& bl_list) { bullet_list_ = bl_list; }
 
-	void InitBullet(BulletObject* p_bullet, SDL_Renderer* screen);
-	void MakeBullet(SDL_Renderer* screen, const int& x_limit, const int& y_limit);
+	//void InitBullet(BulletObject* p_bullet, SDL_Renderer* screen);
+	//void MakeBullet(SDL_Renderer* screen, const int& x_limit, const int& y_limit);
 
 	void RemoveBullet(const int& index);
 	SDL_Rect GetRectFrame();
@@ -74,5 +74,5 @@ private:
 	std::vector<BulletObject*> bullet_list_;
 };
 
-#endif // !THREATS_OBJECT_H_
+#endif // !MONSTER_H_
 

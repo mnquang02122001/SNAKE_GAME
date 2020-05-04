@@ -1,4 +1,4 @@
-#include"Game_map.h"
+#include"Map.h"
 
 void GameMap::LoadMap(char* name) {
 	FILE* fp = NULL;

@@ -1,5 +1,5 @@
-#ifndef BULLET_OBJECT_H_
-#define BULLET_OBJECT_H_
+#ifndef GUN_H_
+#define GUN_H_
 
 #include"BaseObject.h"
 #include"CommonFunc.h"
@@ -48,4 +48,4 @@ private:
 
 
 
-#endif // !BULLET_OBJECT_H_
+#endif // !GUN_H_

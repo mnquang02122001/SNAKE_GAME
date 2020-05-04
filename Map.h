@@ -1,5 +1,5 @@
-#ifndef  GAME_MAP_H
-#define GAME_MAP_H
+#ifndef MAP_H_
+#define MAP_H_
 
 #include"BaseObject.h"
 #include"CommonFunc.h"
@@ -28,5 +28,5 @@ private:
 	Map game_map_;
 	TileMat tile_mat[MAX_TILES];
 };
-#endif // ! GAME_MAP_H
+#endif // !MAP_H_
 

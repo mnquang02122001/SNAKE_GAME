@@ -1,15 +1,15 @@
-#ifndef MAIN_OBJECT_H
-#define MAIN_OBJECT_H
+#ifndef PLAYER_H
+#define PLAYER_H
 
 #include<vector>
 #include"CommonFunc.h"
 #include"BaseObject.h"
-#include"BulletObject.h"
+#include"Gun.h"
 
 #define GRAVITY_SPEED 4
 #define MAX_FALL_SPEED 10
 #define PLAYER_SPEED 6
-#define PLAYER_JUMP_VAL 35
+#define PLAYER_JUMP_VAL 37
 #define PLAYER_FRAME_NUM 1
 class MainObject : public BaseObject {
 public: 
@@ -37,6 +37,7 @@ public:
 	void HandleBullet(SDL_Renderer* des);
 	void IncreaseMoney();
 	void RemoveBullet(const int& index);
+	void set_comeback_time(const int& cb_time) { come_back_time = cb_time; }
 private:
 	int money_count;
 	std::vector<BulletObject*> p_bullet_list_;
@@ -63,5 +64,5 @@ private:
 	int come_back_time;
 };
 
-#endif // !MAIN_OBJECT_H
+#endif // !PLAYER_H
 
