@@ -150,12 +150,16 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="Object.cpp" />
     <ClCompile Include="CommonFunc.cpp" />
+    <ClCompile Include="Food.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="Snake.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Object.h" />
     <ClInclude Include="CommonFunc.h" />
+    <ClInclude Include="Food.h" />
     <ClInclude Include="Snake.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

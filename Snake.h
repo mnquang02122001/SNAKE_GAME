@@ -2,12 +2,7 @@
 #ifndef SNAKE_H_
 #define SNAKE_H_
 
-class Snake {
-public:
-	Snake();
-	~Snake();
-	void renderSnake(SDL_Renderer* renderer, SDL_Rect snake_, int x_, int y_, int tile_,vector<int> tail_x, vector<int> tail_y, int tail_length);
-private:
+struct Snake {
 	SDL_Rect snake_frame_;
 	int tail_length_;
 	vector<int> tail_x_;
@@ -20,9 +15,16 @@ private:
 
 	bool up, down, left, right;
 
-	bool increase_frame_;
+	bool input_frame_;
 
 	bool re_do_;
+
+
+	Snake();
+	~Snake();
+	void renderSnake(SDL_Renderer* renderer);
+	void HandleInput(SDL_Event e);
+	void UpdateTail();
 };
 
 #endif // !SNAKE_H_
