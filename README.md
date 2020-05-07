@@ -1,15 +1,11 @@
 # PROJECT_GAME
 
-Mai Nhat Quang
-Mai Nhat Quang
-Mai Nhat Quang
-Mai Nhat Quang
+Snake Game with SDL 2.0
 
 
-Mai Nhat QuangMai Nhat Quang
-
-
-
+Start with press any directive key(left, right, up, down).
+Your mission is that you must carefully control the snake to eat food as much us possible.
+You will win if the length of snake's tail is full of map, lose if you accidentally eat your tail.
 
 
 
