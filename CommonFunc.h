@@ -22,8 +22,5 @@ static SDL_Event event;
 const int SCREEN_WIDTH = 577;
 const int SCREEN_HEIGHT = 577;
 const string WINDOW_TITLE = "SNAKE GAME";
-
-const int HEIGHT_TILE = 24;
-const int WIDTH_TILE = 24;
 const int TILE = 24;
 #endif // !COMMONFUNC_H_

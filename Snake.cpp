@@ -6,8 +6,8 @@ Snake::Snake() {
 	snake_frame_.w = 0;
 	snake_frame_.h = 0;
 
-	x_pos_ = 0;
-	y_pos_ = 0;
+	x_pos_ = TILE * TILE / 2;
+	y_pos_ = TILE * TILE / 2;
 	pre_x_ = 0;
 	pre_y_ = 0;
 	tail_length_ = 0;
@@ -16,64 +16,71 @@ Snake::Snake() {
 	down = false;
 	right = false;
 	left = false;
-
-	input_frame_ = false;
-	re_do_ = false;
 }
 Snake::~Snake(){}
 
 void Snake::renderSnake(SDL_Renderer* renderer) {
-	SDL_SetRenderDrawColor(renderer, 255, 0, 0, 255);
 	snake_frame_.w = TILE;
 	snake_frame_.h = TILE;
-	//Lay vi tri x y cua block tail
+	// Draw Tail
 	for (int i = 0; i < tail_length_; i++)
 	{
 		snake_frame_.x = tail_x_[i];
 		snake_frame_.y = tail_y_[i];
+		if (i % 2 == 0) {
+			SDL_SetRenderDrawColor(renderer, 0, 0, 255, 255);
+		}
+		else {
+			SDL_SetRenderDrawColor(renderer, 255, 255, 0, 255);
+		}
 		SDL_RenderFillRect(renderer, &snake_frame_);
 	}
+	//Draw Head
 	snake_frame_.x = x_pos_;
 	snake_frame_.y = y_pos_;
+	SDL_SetRenderDrawColor(renderer, 255, 0, 0, 255);
 	SDL_RenderFillRect(renderer, &snake_frame_);
 }
 
 void Snake::HandleInput(SDL_Event e) {
-	input_frame_ = false;
 	if (SDL_PollEvent(&e)) {
-		if (event.type == SDL_QUIT) {
+		if (e.type == SDL_QUIT) {
 			return;
 		}
-		if (e.type == SDL_KEYDOWN && !input_frame_) {
+		if (e.type == SDL_KEYDOWN ) {
 			switch (e.key.keysym.sym)
 			{
 			case SDLK_LEFT:
-				right = false;
-				left = true;
-				up = false;
-				down = false;
-				input_frame_ = true;
+				if (!right) {
+					right = false;
+					left = true;
+					up = false;
+					down = false;
+				}
 				break;
 			case SDLK_RIGHT:
-				right = true;
-				left = false;
-				up = false;
-				down = false;
-				input_frame_ = true;
+				if (!left) {
+					right = true;
+					left = false;
+					up = false;
+					down = false;
+				}
 				break;
 			case SDLK_UP:
-				right = false;
-				left = false;
-				up = true;
-				down = false;
-				input_frame_ = true;
+				if (!down) {
+					right = false;
+					left = false;
+					up = true;
+					down = false;
+				}
 				break;
 			case SDLK_DOWN:
-				right = false;
-				left = false;
-				up = false;
-				down = true;
-				input_frame_ = true;
+				if (!up) {
+					right = false;
+					left = false;
+					up = false;
+					down = true;
+				}
 				break;
 			default:
 				break;
@@ -98,11 +105,12 @@ void Snake::HandleInput(SDL_Event e) {
 } 
 
 void Snake::UpdateTail() {
+	// cap nhat kich co khi collid
 	if (tail_x_.size() != tail_length_) {
 		tail_x_.push_back(pre_x_);
 		tail_y_.push_back(pre_y_);
 	}
-
+	//noi duoi
 	for (int i = 0; i < tail_length_; i++) {
 		if (i > 0) {
 			tail_x_[i - 1] = tail_x_[i];
@@ -113,4 +121,56 @@ void Snake::UpdateTail() {
 		tail_x_[tail_length_ - 1] = pre_x_;
 		tail_y_[tail_length_ - 1] = pre_y_;
 	}
+	if (x_pos_ < 0) {
+		x_pos_ = TILE * TILE - TILE;
+	}
+	else if (x_pos_ > TILE * TILE - TILE) {
+		x_pos_ = 0;
+	}
+	if (y_pos_ < 0) {
+		y_pos_ = TILE * TILE - TILE;
+	}
+	else if (y_pos_ > TILE * TILE - TILE) {
+		y_pos_ = 0;
+	}
+}
+bool Snake::CheckGameOver() {
+	bool check = false;
+	cout << "(" << x_pos_ << " " << y_pos_ << ")" << endl;
+	for (int i = 0; i < tail_length_; i++) {
+		if (x_pos_ == tail_x_[i] && y_pos_ == tail_y_[i]) {
+			check = true;
+		}
+	}
+	return check;
+}
+void Snake::NewGame() {
+	x_pos_ = TILE * TILE / 2;
+	y_pos_ = TILE * TILE / 2;
+	tail_length_ = 0;
+	tail_x_.clear();
+	tail_y_.clear();
+	up = false;
+	down = false;
+	right = false;
+	left = false;
+}
+pair<int, int> Snake::SpawnFood() {
+	bool check = true;
+	srand(time(0));
+	int food_x = TILE * (rand() % TILE);
+	int food_y = TILE * (rand() % TILE);
+	pair<int, int> food_locate;
+	for (int i = 0; i < tail_length_; i++) {
+		if ((food_x == tail_x_[i] && food_y == tail_y_[i]) || (food_x == x_pos_ && food_y == y_pos_)) {
+			check = false;
+		}
+	}
+	if (!check) {
+		food_locate = make_pair(-1000, -1000);
+	}
+	else {
+		food_locate = make_pair(food_x, food_y);
+	}
+	return food_locate;
 }
