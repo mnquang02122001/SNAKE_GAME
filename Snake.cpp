@@ -28,7 +28,7 @@ void Snake::renderSnake(SDL_Renderer* renderer) {
 		snake_frame_.x = tail_x_[i];
 		snake_frame_.y = tail_y_[i];
 		if (i % 2 == 0) {
-			SDL_SetRenderDrawColor(renderer, 0, 0, 255, 255);
+			SDL_SetRenderDrawColor(renderer, 131, 121, 94, 255);
 		}
 		else {
 			SDL_SetRenderDrawColor(renderer, 255, 255, 0, 255);
@@ -122,13 +122,13 @@ void Snake::UpdateTail() {
 		tail_y_[tail_length_ - 1] = pre_y_;
 	}
 	if (x_pos_ < 0) {
-		x_pos_ = TILE * TILE - TILE;
+		x_pos_ = TILE * TILE ;
 	}
 	else if (x_pos_ > TILE * TILE - TILE) {
 		x_pos_ = 0;
 	}
 	if (y_pos_ < 0) {
-		y_pos_ = TILE * TILE - TILE;
+		y_pos_ = TILE * TILE ;
 	}
 	else if (y_pos_ > TILE * TILE - TILE) {
 		y_pos_ = 0;
@@ -136,13 +136,15 @@ void Snake::UpdateTail() {
 }
 bool Snake::CheckGameOver() {
 	bool check = false;
-	cout << "(" << x_pos_ << " " << y_pos_ << ")" << endl;
 	for (int i = 0; i < tail_length_; i++) {
 		if (x_pos_ == tail_x_[i] && y_pos_ == tail_y_[i]) {
 			check = true;
 		}
 	}
 	return check;
+}
+bool Snake::CheckWin() {
+	return (tail_length_ >= 576);
 }
 void Snake::NewGame() {
 	x_pos_ = TILE * TILE / 2;
@@ -173,4 +175,7 @@ pair<int, int> Snake::SpawnFood() {
 		food_locate = make_pair(food_x, food_y);
 	}
 	return food_locate;
+}
+void Snake::IncreaseTailLength() {
+	tail_length_++;
 }

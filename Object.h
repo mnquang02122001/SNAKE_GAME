@@ -1,7 +1,17 @@
 #ifndef OBJECT_H_
 #define OBJECT_H_
 #include"CommonFunc.h"
-void DrawBorder(SDL_Renderer* renderer);
-bool CheckCollision(int x1, int y1, int x2, int y2);
+class Object
+{
+public:
+	Object();
+	~Object();
+	bool LoadImg(string path, SDL_Renderer* renderer);
+	void RenderBackGround(SDL_Renderer* renderer);
+	void Free();
+protected:
+	SDL_Texture* text_;
+	SDL_Rect rect_;
+};
 #endif // !OBJECT_H_
 

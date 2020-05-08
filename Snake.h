@@ -13,8 +13,8 @@ private:
 	int pre_y_;
 
 	bool up, down, left, right;
-public:
 	int tail_length_;
+public:
 	Snake();
 	~Snake();
 	void renderSnake(SDL_Renderer* renderer);
@@ -22,11 +22,13 @@ public:
 	void UpdateTail();
 	pair<int, int> SpawnFood();
 	bool CheckGameOver();
+	bool CheckWin();
 	void NewGame();
 	void setXPOS(int xpos) { x_pos_ = xpos; }
 	void setYPOS(int ypos) { y_pos_ = ypos; }
 	int getXPOS() const { return x_pos_; }
 	int getYPOS() const  { return y_pos_; }
+	void IncreaseTailLength();
 };
 
 #endif // !SNAKE_H_
