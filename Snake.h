@@ -28,6 +28,7 @@ public:
 	void setYPOS(int ypos) { y_pos_ = ypos; }
 	int getXPOS() const { return x_pos_; }
 	int getYPOS() const  { return y_pos_; }
+	int getLength() const { return tail_length_; }
 	void IncreaseTailLength();
 };
 

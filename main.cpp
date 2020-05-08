@@ -2,6 +2,7 @@
 #include"Snake.h"
 #include"Object.h"
 #include"Food.h"
+#include"Text.h"
 Snake p_snake;
 Food p_food;
 Object p_background;
@@ -10,9 +11,13 @@ int main(int argc, char* argv[]) {
 	if (!p_background.LoadImg("img//BackGround123.jpg", renderer)) {
 		return 0;
 	}
+	if (TTF_Init() < 0) {
+		return 0;
+	}
 	bool re_spawn = false;
+	DisPlayMenu(renderer, event);
 	while (true) {
-		SDL_SetRenderDrawColor(renderer, 255, 255, 255, 255);
+		SDL_SetRenderDrawColor(renderer, 0, 0, 0, 255);
 		SDL_RenderClear(renderer);
 
 
@@ -37,6 +42,7 @@ int main(int argc, char* argv[]) {
 		}
 		p_snake.UpdateTail();
 		if (p_snake.CheckGameOver()) {
+			DisplayGameOver(renderer, event, p_snake.getLength());
 			p_snake.NewGame();
 			re_spawn = false;
 			pair<int, int> loc_food = p_snake.SpawnFood();
@@ -47,6 +53,7 @@ int main(int argc, char* argv[]) {
 			}
 		}
 		if (p_snake.CheckWin()) {
+			DisPlayYouWin(renderer, event);
 			p_snake.NewGame();
 			re_spawn = false;
 			pair<int, int> loc_food = p_snake.SpawnFood();
@@ -59,11 +66,12 @@ int main(int argc, char* argv[]) {
 		p_background.RenderBackGround(renderer);
 		p_snake.renderSnake(renderer);
 		p_food.renderFood(renderer);
+		RenderScrore(renderer, p_snake.getLength());
 		DrawBorder(renderer);
 		SDL_RenderPresent(renderer);
 		SDL_Delay(50);
 	}
-
+	TTF_Quit();
 	waitUntilKeyPressed();
 	quitSDL(window, renderer);
 
