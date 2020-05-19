@@ -65,7 +65,7 @@ void DisPlayYouWin(SDL_Renderer* renderer, SDL_Event e) {
 	while (true) {
 		SDL_RenderPresent(renderer);
 		if (SDL_PollEvent(&event)) {
-			if (event.type == SDL_QUIT) {
+			if (event.type == SDL_QUIT || event.key.keysym.sym == SDLK_ESCAPE) {
 				exit(0);
 			}
 			if (event.key.keysym.sym == SDLK_RETURN) {
@@ -112,7 +112,7 @@ void DisplayGameOver(SDL_Renderer* renderer, SDL_Event e, int tailLength) {
 	while (true) {
 		SDL_RenderPresent(renderer);
 		if (SDL_PollEvent(&event)) {
-			if (event.type == SDL_QUIT) {
+			if (event.type == SDL_QUIT || event.key.keysym.sym == SDLK_ESCAPE) {
 				exit(0);
 			}
 			if (event.key.keysym.sym == SDLK_RETURN) {

@@ -82,6 +82,8 @@ void Snake::HandleInput(SDL_Event e) {
 					down = true;
 				}
 				break;
+			case SDLK_ESCAPE:
+				exit(0);
 			default:
 				break;
 			}
@@ -111,11 +113,9 @@ void Snake::UpdateTail() {
 		tail_y_.push_back(pre_y_);
 	}
 	//noi duoi
-	for (int i = 0; i < tail_length_; i++) {
-		if (i > 0) {
+	for (int i = 1; i < tail_length_; i++) {
 			tail_x_[i - 1] = tail_x_[i];
 			tail_y_[i - 1] = tail_y_[i];
-		}
 	}
 	if (tail_length_ > 0) {
 		tail_x_[tail_length_ - 1] = pre_x_;

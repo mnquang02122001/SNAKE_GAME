@@ -9,9 +9,11 @@ Object p_background;
 int main(int argc, char* argv[]) {
 	initSDL(window, renderer, SCREEN_WIDTH, SCREEN_HEIGHT, WINDOW_TITLE);
 	if (!p_background.LoadImg("img//BackGround123.jpg", renderer)) {
+		cout << "ERROR";
 		return 0;
 	}
 	if (TTF_Init() < 0) {
+		cout << "ERROR";
 		return 0;
 	}
 	bool re_spawn = false;
@@ -69,7 +71,7 @@ int main(int argc, char* argv[]) {
 		RenderScrore(renderer, p_snake.getLength());
 		DrawBorder(renderer);
 		SDL_RenderPresent(renderer);
-		SDL_Delay(50);
+		SDL_Delay(200);
 	}
 	TTF_Quit();
 	waitUntilKeyPressed();
