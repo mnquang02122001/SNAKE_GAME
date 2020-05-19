@@ -71,7 +71,7 @@ int main(int argc, char* argv[]) {
 		RenderScrore(renderer, p_snake.getLength());
 		DrawBorder(renderer);
 		SDL_RenderPresent(renderer);
-		SDL_Delay(200);
+		SDL_Delay(50);
 	}
 	TTF_Quit();
 	waitUntilKeyPressed();
